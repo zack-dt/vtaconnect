@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'mechanize'
+
+a = Mechanize.new { |agent|
+  agent.user_agent_alias = 'Mac Safari'
+}
+
+puts "> Fetching vta.org..."
+a.get('http://vta.org/') do |page|
+  form = page.form_with(:id => 'anon_form')
+
+  unless (form)
+    puts "You seem to already be connected to the WiFi."
+    exit 0
+  end
+  form.action = page.uri.to_s
+
+  puts "> Submitting TOS form..."
+  result = form.submit
+  puts "> Redirecting to login..."
+  result = result.meta_refresh[0].click
+
+  puts "You should now be connected."
+end
