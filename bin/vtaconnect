@@ -15,6 +15,10 @@ puts "> Fetching vta.org..."
     page = a.get('http://vta.org/')
     # success
     break
+  rescue OpenSSL::SSL::SSLError => e
+    # retry
+    puts "... SSL Error. Retrying"
+    sleep 1
   rescue SocketError => e
     # retry
     puts "... Not connected yet. Retrying."
